@@ -13,7 +13,7 @@ import java.util.Date;
 @Service
 public class TokenService {
 
-    static final long EXPIRATION_TIME = 60 * 1000;     // 60 s
+    static final long EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000;     // 7 days
     static final String TOKEN_SECRET = "P@ssw02d";     // JWT密码
 
     public String createToken(User user) {
@@ -38,7 +38,6 @@ public class TokenService {
             JWTVerifier verifier = JWT.require(Algorithm.HMAC256(TOKEN_SECRET)).withIssuer("auth0").build();
             DecodedJWT jwt = verifier.verify(token);
             System.out.println("认证通过：");
-            System.out.println("issuer: " + jwt.getIssuer());
             System.out.println("username: " + jwt.getClaim("username").asString());
             System.out.println("过期时间：      " + jwt.getExpiresAt());
             return true;

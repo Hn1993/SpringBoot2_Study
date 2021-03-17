@@ -19,4 +19,6 @@ public class User {
     private String account;
     @Column
     private String pwd;
+
+    private String token;
 }

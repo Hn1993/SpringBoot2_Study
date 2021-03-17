@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 
 
 @RestController
@@ -39,7 +40,7 @@ public class JpaController {
             LOG.info("user="+user.toString());
             String token =  tokenService.createToken(user);
             LOG.info("token = " + token);
-
+            user.setToken(token);
             boolean tokenVerify = tokenService.verifyToken(token);
             LOG.info("tokenVerify = " + tokenVerify);
 
@@ -65,7 +66,9 @@ public class JpaController {
             boolean tokenVerify = tokenService.verifyToken(token);
             LOG.info("tokenVerify = " + tokenVerify);
             if (tokenVerify){
-                return Result.Success("请求成功!",user);
+                ArrayList<User> users = new ArrayList<>();
+                users.add(user);
+                return Result.Success("请求成功!",users);
             }else {
                 return Result.Error("token验证失败!");
             }
