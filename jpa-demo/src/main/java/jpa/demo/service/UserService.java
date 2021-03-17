@@ -33,6 +33,11 @@ public class UserService {
         return userRepository.findSql(name) ;
     }
 
+    // 自定义SQL查询
+    public User findByAccount (String account){
+        return userRepository.findUserByAccount(account) ;
+    }
+
     // 根据ID修改
     public void update (User user){
         userRepository.save(user) ;

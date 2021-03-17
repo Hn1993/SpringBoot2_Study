@@ -16,4 +16,8 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     // 自定义查询
     @Query("from User u where u.name=:name")
     User findSql(@Param("name") String name);
+
+    // 自定义查询
+    @Query("from User u where u.account=:account")
+    User findUserByAccount(@Param("account") String account);
 }

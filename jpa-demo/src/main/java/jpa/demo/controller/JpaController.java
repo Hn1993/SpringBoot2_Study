@@ -3,11 +3,14 @@ package jpa.demo.controller;
 
 import jpa.demo.entity.Result;
 import jpa.demo.entity.User;
+import jpa.demo.service.TokenService;
 import jpa.demo.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 @RestController
@@ -17,12 +20,34 @@ public class JpaController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private TokenService tokenService;
+
     @RequestMapping("/user")
     public String userTest(){
         User user = userService.findByAge(19);
         LOG.info("user="+user.toString());
         return user.getName();
     }
+
+    @GetMapping(path = "/login", params = "account")
+    public Result login(String account){
+        User user = userService.findByAccount(account);
+        if (user != null){
+            user.setPwd("");
+
+            LOG.info("user="+user.toString());
+            String token =  tokenService.createToken(user);
+            LOG.info("token = " + token);
+
+            boolean tokenVerify = tokenService.verifyToken(token);
+            LOG.info("tokenVerify = " + tokenVerify);
+
+            return Result.Success("登陆成功!",user);
+        }
+        return Result.Error("登陆失败!");
+    }
+
 
     @RequestMapping(path = "/getUser/{userName}",method = RequestMethod.GET)
     public User getUser(@PathVariable String userName){
@@ -31,12 +56,20 @@ public class JpaController {
         return user;
     }
 
-    @GetMapping(path = "getUserByName",params = "userName")
-    public Result getUserByName(String userName){
+    @GetMapping(path = "getUserByName",params = "userName",headers = "token")
+    public Result getUserByName(String userName,@RequestHeader String token){
         User user = userService.findSql(userName);
         if (user != null){
             LOG.info("user="+user.toString());
-            return Result.Success("请求成功!",user);
+
+            boolean tokenVerify = tokenService.verifyToken(token);
+            LOG.info("tokenVerify = " + tokenVerify);
+            if (tokenVerify){
+                return Result.Success("请求成功!",user);
+            }else {
+                return Result.Error("token验证失败!");
+            }
+
         }
         return Result.Error("查找用户失败!");
     }
