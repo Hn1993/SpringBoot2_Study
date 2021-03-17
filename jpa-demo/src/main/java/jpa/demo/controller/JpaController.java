@@ -1,6 +1,7 @@
 package jpa.demo.controller;
 
 
+import jpa.demo.entity.Result;
 import jpa.demo.entity.User;
 import jpa.demo.service.UserService;
 import org.slf4j.Logger;
@@ -31,12 +32,12 @@ public class JpaController {
     }
 
     @GetMapping(path = "getUserByName",params = "userName")
-    public User getUserByName(String userName){
+    public Result getUserByName(String userName){
         User user = userService.findSql(userName);
-        LOG.info("user="+user.toString());
         if (user != null){
-            return user;
+            LOG.info("user="+user.toString());
+            return Result.Success("请求成功!",user);
         }
-        return null;
+        return Result.Error("查找用户失败!");
     }
 }
