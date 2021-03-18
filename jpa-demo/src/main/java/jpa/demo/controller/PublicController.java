@@ -17,4 +17,11 @@ public class PublicController {
         return Result.Success("publicTest","ojbk");
     }
 
+
+    @PostMapping(path = "/testException")
+    public Result publicTestException(){
+        int i = 1;
+//        i = i / 0;
+        return Result.Success("publicTest","ojbk");
+    }
 }

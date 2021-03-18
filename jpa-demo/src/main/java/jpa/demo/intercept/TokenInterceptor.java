@@ -23,9 +23,8 @@ public class TokenInterceptor implements HandlerInterceptor {
         if (!StringUtils.isEmpty(token) && tokenService.verifyToken(token)){ //token 验证通过
             System.out.println("token验证通过!="+token);
             return true; //放行
-        }else {
-            returnTokenFail(response);
         }
+        returnTokenFail(response);
         return false;
     }
 

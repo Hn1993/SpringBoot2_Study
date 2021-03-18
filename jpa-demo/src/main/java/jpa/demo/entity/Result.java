@@ -22,6 +22,14 @@ public class Result<T>{
     }
 
     /**
+     * 服务器内部错误
+     * @return
+     */
+    public static Result Exception(String msg) {
+        return new Result<>(1, msg,new Object());
+    }
+
+    /**
      * 成功
      * @param object
      * @return
